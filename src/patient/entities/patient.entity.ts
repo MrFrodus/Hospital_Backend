@@ -45,13 +45,13 @@ export class Patient {
   password: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
   })
   ssn: number;
 
   @OneToOne(() => Meta)
   @JoinColumn({
-    name: "metaId",
+    name: "meta_id",
     referencedColumnName: "id",
     foreignKeyConstraintName: "fk_patient_meta",
   })
