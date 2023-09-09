@@ -4,4 +4,6 @@ export class CreateMetaDto {
   age: number;
 
   gender: string;
+
+  birth_date: string;
 }

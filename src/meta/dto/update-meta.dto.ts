@@ -7,4 +7,6 @@ export class UpdateMetaDto extends PartialType(CreateMetaDto) {
   age: number;
 
   gender: string;
+
+  birth_date: string;
 }

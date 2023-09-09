@@ -7,7 +7,8 @@ export const dataSourceOptions: DataSourceOptions = {
   username: "root",
   password: "password",
   database: "hospital",
-  entities: [`dist/**/*.entity.js`],
+  entities: ["dist/**/*.entity.js"],
+  migrations: ["dist/db/migrations/*.js"],
   synchronize: false,
 };
 
