@@ -5,5 +5,5 @@ export class CreateMetaDto {
 
   gender: string;
 
-  birth_date: string;
+  birth_date: Date;
 }
