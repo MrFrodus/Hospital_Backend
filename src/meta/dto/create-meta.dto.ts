@@ -1,9 +1,13 @@
 export class CreateMetaDto {
-  address: string;
+  address?: string;
 
-  age: number;
+  age?: number;
 
-  gender: string;
+  gender?: string;
 
-  birth_date: Date;
+  birth_date?: Date;
+
+  profile_img: string;
+
+  img_caption?: string;
 }

@@ -28,6 +28,18 @@ export class Meta {
   })
   birth_date: Date;
 
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  profile_img: string;
+
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  img_caption: string;
+
   @CreateDateColumn()
   created_at: Date;
 

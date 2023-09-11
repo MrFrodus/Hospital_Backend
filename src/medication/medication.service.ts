@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateMedicationDto } from './dto/create-medication.dto';
-import { UpdateMedicationDto } from './dto/update-medication.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateMedicationDto } from "./dto/create-medication.dto";
+import { UpdateMedicationDto } from "./dto/update-medication.dto";
 
 @Injectable()
 export class MedicationService {
   create(createMedicationDto: CreateMedicationDto) {
-    return 'This action adds a new medication';
+    return "This action adds a new medication";
   }
 
   findAll() {
