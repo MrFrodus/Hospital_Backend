@@ -7,7 +7,7 @@ export class CreateMetaDto {
 
   birth_date?: Date;
 
-  profile_img: string;
+  profile_img?: string;
 
   img_caption?: string;
 }

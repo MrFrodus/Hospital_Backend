@@ -6,6 +6,7 @@ import { MetaController } from "./meta.controller";
 import { Meta } from "./entities/meta.entity";
 
 @Module({
+  exports: [MetaService],
   imports: [TypeOrmModule.forFeature([Meta])],
   controllers: [MetaController],
   providers: [MetaService, FileManager],

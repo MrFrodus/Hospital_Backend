@@ -6,10 +6,14 @@ import "dotenv/config";
 const region = process.env.AWS_BUCKET_REGION;
 const bucketName = process.env.AWS_BUCKET_NAME;
 
-const s3Client = new S3Client({ region });
-
 @Injectable()
 export class StorageS3 {
+  s3Client: S3Client;
+
+  constructor() {
+    this.s3Client = new S3Client({ region });
+  }
+
   async upload(file: Express.Multer.File) {
     try {
       const uploadParams = {
@@ -19,7 +23,7 @@ export class StorageS3 {
         ContentType: file.mimetype,
       };
 
-      await s3Client.send(new PutObjectCommand(uploadParams));
+      await this.s3Client.send(new PutObjectCommand(uploadParams));
 
       return file.originalname;
     } catch (error) {
