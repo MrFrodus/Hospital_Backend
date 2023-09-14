@@ -1,9 +1,12 @@
-import { UserDto } from "src/shared/user/user.dto";
+import { CreateUserDto } from "src/shared/user/create-user.dto";
+import { IsInt, IsOptional, IsString } from "class-validator";
 
-export class CreateNurseDto extends UserDto {
-  position: string;
+export class CreateNurseDto extends CreateUserDto {
+  @IsOptional()
+  @IsString()
+  position?: string;
 
-  department_id: number;
-
-  meta_id: number;
+  @IsOptional()
+  @IsInt()
+  department_id?: number;
 }

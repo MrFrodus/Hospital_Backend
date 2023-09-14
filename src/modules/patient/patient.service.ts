@@ -6,6 +6,7 @@ import { FileManager } from "src/common/filestore/file-manager.service";
 import { CreatePatientDto } from "./dto/create-patient.dto";
 import { UpdatePatientDto } from "./dto/update-patient.dto";
 import { Patient } from "./entities/patient.entity";
+import { CreateMetaDto } from "../meta/dto/create-meta.dto";
 
 @Injectable()
 export class PatientService {
@@ -15,10 +16,13 @@ export class PatientService {
     private readonly fileManager: FileManager
   ) {}
 
-  async create(createPatientDto: CreatePatientDto) {
+  async create(
+    createPatientDto: CreatePatientDto,
+    createMetaDto: CreateMetaDto
+  ) {
     const newPatient = this.patientRepository.create(createPatientDto);
 
-    const newMeta = await this.metaService.create({});
+    const newMeta = await this.metaService.create(newPatient.meta);
 
     newPatient.meta = newMeta;
 

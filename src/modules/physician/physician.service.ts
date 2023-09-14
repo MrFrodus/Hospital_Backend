@@ -4,8 +4,10 @@ import { Repository } from "typeorm";
 import { MetaService } from "src/modules/meta/meta.service";
 import { FileManager } from "src/common/filestore/file-manager.service";
 import { CreatePhysicianDto } from "./dto/create-physician.dto";
+import { RequestPhysicianDto } from "./dto/request-physician.dto";
 import { UpdatePhysicianDto } from "./dto/update-physician.dto";
 import { Physician } from "./entities/physician.entity";
+import { CreateMetaDto } from "../meta/dto/create-meta.dto";
 
 @Injectable()
 export class PhysicianService {
@@ -16,10 +18,13 @@ export class PhysicianService {
     private readonly fileManager: FileManager
   ) {}
 
-  async create(createPhysicianDto: CreatePhysicianDto) {
+  async create(
+    createPhysicianDto: CreatePhysicianDto,
+    createMetaDto: CreateMetaDto
+  ) {
     const newPhysician = this.physicianRepository.create(createPhysicianDto);
 
-    const newMeta = await this.metaService.create({});
+    const newMeta = await this.metaService.create(createMetaDto);
 
     newPhysician.meta = newMeta;
 

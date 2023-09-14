@@ -7,17 +7,23 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common/pipes";
 import { PhysicianService } from "./physician.service";
-import { CreatePhysicianDto } from "./dto/create-physician.dto";
+import { RequestPhysicianDto } from "./dto/request-physician.dto";
 import { UpdatePhysicianDto } from "./dto/update-physician.dto";
+import { CreatePhysicianDto } from "./dto/create-physician.dto";
+import { CreateMetaDto } from "../meta/dto/create-meta.dto";
 
 @Controller("physician")
 export class PhysicianController {
   constructor(private readonly physicianService: PhysicianService) {}
 
   @Post()
-  create(@Body() createPhysicianDto: CreatePhysicianDto) {
-    return this.physicianService.create(createPhysicianDto);
+  create(@Body(new ValidationPipe()) requestPhysicianDto: RequestPhysicianDto) {
+    return this.physicianService.create(
+      requestPhysicianDto.physician as CreatePhysicianDto,
+      requestPhysicianDto.meta as CreateMetaDto
+    );
   }
 
   @Get()
@@ -38,7 +44,7 @@ export class PhysicianController {
   @Patch(":id")
   update(
     @Param("id") id: string,
-    @Body() updatePhysicianDto: UpdatePhysicianDto
+    @Body(new ValidationPipe()) updatePhysicianDto: UpdatePhysicianDto
   ) {
     return this.physicianService.update(+id, updatePhysicianDto);
   }

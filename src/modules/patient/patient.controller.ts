@@ -7,17 +7,22 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common/pipes/validation.pipe";
 import { PatientService } from "./patient.service";
 import { CreatePatientDto } from "./dto/create-patient.dto";
 import { UpdatePatientDto } from "./dto/update-patient.dto";
+import { CreateMetaDto } from "../meta/dto/create-meta.dto";
 
 @Controller("patient")
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+  create(
+    @Body(new ValidationPipe()) createPatientDto: CreatePatientDto,
+    createMetaDto: CreateMetaDto
+  ) {
+    return this.patientService.create(createPatientDto, createMetaDto);
   }
 
   @Get()
@@ -36,7 +41,10 @@ export class PatientController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updatePatientDto: UpdatePatientDto) {
+  update(
+    @Param("id") id: string,
+    @Body(new ValidationPipe()) updatePatientDto: UpdatePatientDto
+  ) {
     return this.patientService.update(+id, updatePatientDto);
   }
 

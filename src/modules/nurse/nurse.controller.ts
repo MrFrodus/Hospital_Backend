@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common/pipes";
 import { NurseService } from "./nurse.service";
 import { CreateNurseDto } from "./dto/create-nurse.dto";
 import { UpdateNurseDto } from "./dto/update-nurse.dto";
@@ -16,7 +17,7 @@ export class NurseController {
   constructor(private readonly nurseService: NurseService) {}
 
   @Post()
-  create(@Body() createNurseDto: CreateNurseDto) {
+  create(@Body(new ValidationPipe()) createNurseDto: CreateNurseDto) {
     return this.nurseService.create(createNurseDto);
   }
 
@@ -36,7 +37,10 @@ export class NurseController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateNurseDto: UpdateNurseDto) {
+  update(
+    @Param("id") id: string,
+    @Body(new ValidationPipe()) updateNurseDto: UpdateNurseDto
+  ) {
     return this.nurseService.update(+id, updateNurseDto);
   }
 
