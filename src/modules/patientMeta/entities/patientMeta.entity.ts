@@ -8,14 +8,12 @@ import {
   JoinColumn,
   Index,
   Unique,
-  ManyToOne,
 } from "typeorm";
 
 import { Meta } from "src/modules/meta/entities/meta.entity";
-import { Department } from "src/modules/department/entities/department.entity";
 
 @Entity()
-export class Physician {
+export class PatientMeta {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,16 +23,16 @@ export class Physician {
   })
   name: string;
 
-  @Index("idx_physician_email")
-  @Unique("unique_physician_email", ["email"])
+  @Index("idx_patientMeta_email")
+  @Unique("unique_patientMeta_email", ["email"])
   @Column({
     length: 255,
     nullable: false,
   })
   email: string;
 
-  @Index("idx_physician_phone")
-  @Unique("unique_physician_phone", ["phone"])
+  @Index("idx_patientMeta_phone")
+  @Unique("unique_patientMeta_phone", ["phone"])
   @Column({
     nullable: false,
   })
@@ -47,36 +45,20 @@ export class Physician {
   password: string;
 
   @Column({
-    length: 100,
     nullable: true,
   })
-  specification: string;
+  ssn: number;
 
-  @Column({
-    length: 100,
-    nullable: true,
-  })
-  qualification: string;
-
-  @OneToOne(() => Meta, (meta) => meta.physician, {
+  @OneToOne(() => Meta, (meta) => meta.patientMeta, {
     eager: true,
     onDelete: "CASCADE",
   })
   @JoinColumn({
     name: "meta_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_physician_meta",
+    foreignKeyConstraintName: "fk_patientMeta_meta",
   })
   meta: Meta;
-
-  @Index("idx_physician_department")
-  @ManyToOne(() => Department)
-  @JoinColumn({
-    name: "department_id",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_physician_department",
-  })
-  department: Department;
 
   @CreateDateColumn()
   created_at: Date;

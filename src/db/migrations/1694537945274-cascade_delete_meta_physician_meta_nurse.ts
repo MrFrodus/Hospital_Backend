@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CascadeDeleteMetaPhysicianMetaNurse1694537945274
+export class CascadeDeleteMetaPhysician_metaMetaNurse1694537945274
   implements MigrationInterface
 {
-  name = "CascadeDeleteMetaPhysicianMetaNurse1694537945274";
+  name = "CascadeDeleteMetaPhysician_metaMetaNurse1694537945274";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(

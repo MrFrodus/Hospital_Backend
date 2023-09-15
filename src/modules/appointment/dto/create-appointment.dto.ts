@@ -1,7 +1,7 @@
 export class CreateAppointmentDto {
-  patient_id: number;
+  patientMeta_id: number;
 
-  physician_id: number;
+  physicianMeta_id: number;
 
   nurse_id: number;
 

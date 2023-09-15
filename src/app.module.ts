@@ -7,7 +7,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { MetaModule } from "./modules/meta/meta.module";
 import { PatientModule } from "./modules/patient/patient.module";
-import { PhysicianModule } from "./modules/physician/physician.module";
+import { Physician_metaModule } from "./modules/physician_meta/physician_meta.module";
 import { NurseModule } from "./modules/nurse/nurse.module";
 import { DepartmentModule } from "./modules/department/department.module";
 import { AppointmentModule } from "./modules/appointment/appointment.module";
@@ -16,6 +16,8 @@ import { DiagnosisModule } from "./modules/diagnosis/diagnosis.module";
 import { IllnessModule } from "./modules/illness/illness.module";
 import { MedicationModule } from "./modules/medication/medication.module";
 import { ServiceModule } from "./modules/service/service.module";
+import { AuthModule } from "./modules/auth/auth.module";
+import { UserModule } from "./modules/user/user.module";
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { ServiceModule } from "./modules/service/service.module";
     TypeOrmModule.forRoot(dataSourceOptions),
     MetaModule,
     PatientModule,
-    PhysicianModule,
+    Physician_metaModule,
     NurseModule,
     DepartmentModule,
     AppointmentModule,
@@ -34,6 +36,8 @@ import { ServiceModule } from "./modules/service/service.module";
     IllnessModule,
     MedicationModule,
     ServiceModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

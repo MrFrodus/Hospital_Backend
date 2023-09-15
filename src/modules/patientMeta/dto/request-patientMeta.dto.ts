@@ -1,11 +1,11 @@
 import { RequestUserDto } from "src/shared/user/request-user.dto";
 import { IsNotEmpty, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { CreatePatientDto } from "./create-patient.dto";
+import { CreatePatientMetaDto } from "./create-patientMeta.dto";
 
-export class RequestPatientDto extends RequestUserDto {
+export class RequestPatientMetaDto extends RequestUserDto {
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreatePatientDto)
-  patient: CreatePatientDto;
+  @Type(() => CreatePatientMetaDto)
+  patientMeta: CreatePatientMetaDto;
 }
