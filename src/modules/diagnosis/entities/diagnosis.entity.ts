@@ -10,9 +10,8 @@ import {
   OneToOne,
 } from "typeorm";
 
-import { PhysicianMeta } from "src/modules/physicianMeta/entities/physicianMeta.entity";
-import { PatientMeta } from "src/modules/patientMeta/entities/patientMeta.entity";
 import { Appointment } from "src/modules/appointment/entities/appointment.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 @Entity()
 export class Diagnosis {
@@ -25,23 +24,23 @@ export class Diagnosis {
   })
   name: string;
 
-  @Index("idx_diagnosis_physicianMeta")
-  @ManyToOne(() => PhysicianMeta)
+  @Index("idx_diagnosis_physician")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "physicianMeta_id",
+    name: "physician_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_diagnosis_physicianMeta",
+    foreignKeyConstraintName: "fk_diagnosis_physician",
   })
-  physicianMeta: PhysicianMeta;
+  physician: User;
 
-  @Index("idx_diagnosis_patientMeta")
-  @ManyToOne(() => PatientMeta)
+  @Index("idx_diagnosis_patient")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "patientMeta_id",
+    name: "patient_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_diagnosis_patientMeta",
+    foreignKeyConstraintName: "fk_diagnosis_patient",
   })
-  patientMeta: PatientMeta;
+  patient: User;
 
   @OneToOne(() => Appointment)
   @JoinColumn({

@@ -9,10 +9,8 @@ import {
 } from "@nestjs/common";
 import { ValidationPipe } from "@nestjs/common/pipes";
 import { PhysicianMetaService } from "./physicianMeta.service";
-import { RequestPhysicianMetaDto } from "./dto/request-physicianMeta.dto";
 import { UpdatePhysicianMetaDto } from "./dto/update-physicianMeta.dto";
 import { CreatePhysicianMetaDto } from "./dto/create-physicianMeta.dto";
-import { CreateMetaDto } from "../meta/dto/create-meta.dto";
 
 @Controller("physicianMeta")
 export class PhysicianMetaController {
@@ -21,12 +19,9 @@ export class PhysicianMetaController {
   @Post()
   create(
     @Body(new ValidationPipe())
-    requestPhysicianMetaDto: RequestPhysicianMetaDto
+    createPhysicianMetaDto: CreatePhysicianMetaDto
   ) {
-    return this.physicianMetaService.create(
-      requestPhysicianMetaDto.physicianMeta as CreatePhysicianMetaDto,
-      requestPhysicianMetaDto.meta as CreateMetaDto
-    );
+    return this.physicianMetaService.create(createPhysicianMetaDto);
   }
 
   @Get()
@@ -37,11 +32,6 @@ export class PhysicianMetaController {
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.physicianMetaService.findOne(+id);
-  }
-
-  @Get("img/:id")
-  findOneWithImgUrl(@Param("id") id: string) {
-    return this.physicianMetaService.findOneWithImgUrl(+id);
   }
 
   @Patch(":id")

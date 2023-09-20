@@ -11,42 +11,40 @@ import {
   JoinTable,
 } from "typeorm";
 
-import { PhysicianMeta } from "src/modules/physicianMeta/entities/physicianMeta.entity";
-import { PatientMeta } from "src/modules/patientMeta/entities/patientMeta.entity";
-import { Nurse } from "src/modules/nurse/entities/nurse.entity";
 import { Service } from "src/modules/service/entities/service.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 @Entity()
 export class Appointment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index("idx_appointment_patientMeta")
-  @ManyToOne(() => PatientMeta)
+  @Index("idx_appointment_patient")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "patientMeta_id",
+    name: "patient_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_appointment_patientMeta",
+    foreignKeyConstraintName: "fk_appointment_patient",
   })
-  patientMeta: PatientMeta;
+  patient: User;
 
-  @Index("idx_appointment_physicianMeta")
-  @ManyToOne(() => PhysicianMeta)
+  @Index("idx_appointment_physician")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "physicianMeta_id",
+    name: "physician_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_appointment_physicianMeta",
+    foreignKeyConstraintName: "fk_appointment_physician",
   })
-  physicianMeta: PhysicianMeta;
+  physician: User;
 
   @Index("idx_appointment_nurse")
-  @ManyToOne(() => Nurse)
+  @ManyToOne(() => User)
   @JoinColumn({
     name: "nurse_id",
     referencedColumnName: "id",
     foreignKeyConstraintName: "fk_appointment_nurse",
   })
-  nurse: Nurse;
+  nurse: User;
 
   @Column({
     nullable: false,

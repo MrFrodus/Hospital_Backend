@@ -1,7 +1,6 @@
-import { CreateUserDto } from "src/shared/user/create-user.dto";
 import { IsInt, IsOptional, IsString } from "class-validator";
 
-export class CreateNurseDto extends CreateUserDto {
+export class CreateNurseMetaDto {
   @IsOptional()
   @IsString()
   position?: string;

@@ -1,9 +1,9 @@
 export class CreateDiagnosisDto {
   name: string;
 
-  patientMeta_id: number;
+  patient_id: number;
 
-  physicianMeta_id: number;
+  physician_id: number;
 
   appointment_id: number;
 

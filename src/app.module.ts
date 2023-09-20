@@ -5,10 +5,9 @@ import { join } from "path";
 import { dataSourceOptions } from "./db/data-source";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { MetaModule } from "./modules/meta/meta.module";
-import { PatientModule } from "./modules/patient/patient.module";
-import { Physician_metaModule } from "./modules/physician_meta/physician_meta.module";
-import { NurseModule } from "./modules/nurse/nurse.module";
+import { PatientMetaModule } from "./modules/patientMeta/patientMeta.module";
+import { PhysicianMetaModule } from "./modules/physicianMeta/physicianMeta.module";
+import { NurseMetaModule } from "./modules/nurseMeta/nurseMeta.module";
 import { DepartmentModule } from "./modules/department/department.module";
 import { AppointmentModule } from "./modules/appointment/appointment.module";
 import { PrescriptionModule } from "./modules/prescription/prescription.module";
@@ -25,10 +24,9 @@ import { UserModule } from "./modules/user/user.module";
       rootPath: join(__dirname, "..", "public"),
     }),
     TypeOrmModule.forRoot(dataSourceOptions),
-    MetaModule,
-    PatientModule,
-    Physician_metaModule,
-    NurseModule,
+    PatientMetaModule,
+    PhysicianMetaModule,
+    NurseMetaModule,
     DepartmentModule,
     AppointmentModule,
     PrescriptionModule,

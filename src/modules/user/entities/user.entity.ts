@@ -1,3 +1,6 @@
+import { NurseMeta } from "src/modules/nurseMeta/entities/nurseMeta.entity";
+import { PatientMeta } from "src/modules/patientMeta/entities/patientMeta.entity";
+import { PhysicianMeta } from "src/modules/physicianMeta/entities/physicianMeta.entity";
 import {
   Column,
   Entity,
@@ -8,8 +11,13 @@ import {
   JoinColumn,
   Index,
   Unique,
-  ManyToOne,
 } from "typeorm";
+
+export enum UserRole {
+  PATIENT = "patient",
+  PHYSICIAN = "physician",
+  NURSE = "nurse",
+}
 
 @Entity()
 export class User {
@@ -51,14 +59,21 @@ export class User {
 
   @Column({
     length: 50,
-    nullable: true,
+    nullable: false,
   })
   gender: string;
 
   @Column({
-    nullable: true,
+    nullable: false,
   })
   birth_date: Date;
+
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    nullable: false,
+  })
+  role: UserRole;
 
   @Column({
     length: 255,
@@ -72,20 +87,35 @@ export class User {
   })
   img_caption: string;
 
-  @OneToOne(() => PatientMeta, (patientMeta) => patientMeta.meta, {
+  @OneToOne(() => PatientMeta, (patientMeta) => patientMeta.user, {
     onDelete: "CASCADE",
+  })
+  @JoinColumn({
+    name: "patientMeta_id",
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "fk_user_patientMeta",
   })
   patientMeta: PatientMeta;
 
-  @OneToOne(() => PhysicianMeta, (physicianMeta) => physicianMeta.meta, {
+  @OneToOne(() => PhysicianMeta, (physicianMeta) => physicianMeta.user, {
     onDelete: "CASCADE",
+  })
+  @JoinColumn({
+    name: "physicianMeta_id",
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "fk_user_physicianMeta",
   })
   physicianMeta: PhysicianMeta;
 
-  @OneToOne(() => Nurse, (nurse) => nurse.meta, {
+  @OneToOne(() => NurseMeta, (nurseMeta) => nurseMeta.user, {
     onDelete: "CASCADE",
   })
-  nurse: Nurse;
+  @JoinColumn({
+    name: "nurseMeta_id",
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "fk_user_nurseMeta",
+  })
+  nurseMeta: NurseMeta;
 
   @CreateDateColumn()
   created_at: Date;

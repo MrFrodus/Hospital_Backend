@@ -11,32 +11,31 @@ import {
   JoinTable,
 } from "typeorm";
 
-import { PhysicianMeta } from "src/modules/physicianMeta/entities/physicianMeta.entity";
-import { PatientMeta } from "src/modules/patientMeta/entities/patientMeta.entity";
 import { Medication } from "src/modules/medication/entities/medication.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 @Entity()
 export class Prescription {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index("idx_prescription_physicianMeta")
-  @ManyToOne(() => PhysicianMeta)
+  @Index("idx_prescription_physician")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "physicianMeta_id",
+    name: "physician_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_prescription_physicianMeta",
+    foreignKeyConstraintName: "fk_prescription_physician",
   })
-  physicianMeta: PhysicianMeta;
+  physician: User;
 
-  @Index("idx_prescription_patientMeta")
-  @ManyToOne(() => PatientMeta)
+  @Index("idx_prescription_patient")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "patientMeta_id",
+    name: "patient_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_prescription_patientMeta",
+    foreignKeyConstraintName: "fk_prescription_patient",
   })
-  patientMeta: PatientMeta;
+  patient: User;
 
   @Column({
     length: 255,

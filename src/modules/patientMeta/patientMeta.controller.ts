@@ -11,7 +11,6 @@ import { ValidationPipe } from "@nestjs/common/pipes/validation.pipe";
 import { PatientMetaService } from "./patientMeta.service";
 import { CreatePatientMetaDto } from "./dto/create-patientMeta.dto";
 import { UpdatePatientMetaDto } from "./dto/update-patientMeta.dto";
-import { CreateMetaDto } from "../meta/dto/create-meta.dto";
 
 @Controller("patientMeta")
 export class PatientMetaController {
@@ -19,10 +18,10 @@ export class PatientMetaController {
 
   @Post()
   create(
-    @Body(new ValidationPipe()) createPatientMetaDto: CreatePatientMetaDto,
-    createMetaDto: CreateMetaDto
+    @Body(new ValidationPipe())
+    createPatientMetaDto: CreatePatientMetaDto
   ) {
-    return this.patientMetaService.create(createPatientMetaDto, createMetaDto);
+    return this.patientMetaService.create(createPatientMetaDto);
   }
 
   @Get()
@@ -33,11 +32,6 @@ export class PatientMetaController {
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.patientMetaService.findOne(+id);
-  }
-
-  @Get("img/:id")
-  findOneWithImgUrl(@Param("id") id: string) {
-    return this.patientMetaService.findOneWithImgUrl(+id);
   }
 
   @Patch(":id")

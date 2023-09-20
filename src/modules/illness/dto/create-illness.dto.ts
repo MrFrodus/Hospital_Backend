@@ -1,5 +1,5 @@
 export class CreateIllnessDto {
-  patientMeta_id: number;
+  patient_id: number;
 
   name: string;
 

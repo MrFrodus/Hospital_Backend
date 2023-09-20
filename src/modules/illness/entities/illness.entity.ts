@@ -9,8 +9,8 @@ import {
   ManyToOne,
 } from "typeorm";
 
-import { PatientMeta } from "src/modules/patientMeta/entities/patientMeta.entity";
 import { Diagnosis } from "src/modules/diagnosis/entities/diagnosis.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 @Entity()
 export class Illness {
@@ -23,14 +23,14 @@ export class Illness {
   })
   name: string;
 
-  @Index("idx_illness_patientMeta")
-  @ManyToOne(() => PatientMeta)
+  @Index("idx_illness_patient")
+  @ManyToOne(() => User)
   @JoinColumn({
-    name: "patientMeta_id",
+    name: "patient_id",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_illness_patientMeta",
+    foreignKeyConstraintName: "fk_illness_patient",
   })
-  patientMeta: PatientMeta;
+  patient: User;
 
   @Index("idx_illness_diagnosis")
   @ManyToOne(() => Diagnosis)

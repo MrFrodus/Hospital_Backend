@@ -1,26 +1,29 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialTables1694271118226 implements MigrationInterface {
-  name = "InitialTables1694271118226";
+export class InitialMigration1695044614927 implements MigrationInterface {
+  name = "InitialMigration1695044614927";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE \`meta\` (\`id\` int NOT NULL AUTO_INCREMENT, \`address\` varchar(255) NULL, \`gender\` varchar(50) NULL, \`birth_date\` datetime NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+      `CREATE TABLE \`medication\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`requires_recipe\` tinyint NOT NULL, \`description\` varchar(255) NULL, \`details\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+    );
+    await queryRunner.query(
+      `CREATE TABLE \`service\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`description\` varchar(255) NULL, \`cost\` int NOT NULL, \`details\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
       `CREATE TABLE \`department\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`address\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `CREATE TABLE \`physician\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`email\` varchar(255) NOT NULL, \`phone\` int NOT NULL, \`password\` varchar(72) NOT NULL, \`specification\` varchar(100) NULL, \`qualification\` varchar(100) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`meta_id\` int NULL, \`department_id\` int NULL, INDEX \`idx_physician_email\` (\`email\`), INDEX \`idx_physician_phone\` (\`phone\`), INDEX \`idx_physician_department\` (\`department_id\`), UNIQUE INDEX \`unique_physician_email\` (\`email\`), UNIQUE INDEX \`unique_physician_phone\` (\`phone\`), UNIQUE INDEX \`REL_62dd5660baf86e415ecb4c8731\` (\`meta_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+      `CREATE TABLE \`nurse_meta\` (\`id\` int NOT NULL AUTO_INCREMENT, \`position\` varchar(100) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`department_id\` int NULL, INDEX \`idx_nurse_department\` (\`department_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `CREATE TABLE \`patient\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`email\` varchar(255) NOT NULL, \`phone\` int NOT NULL, \`password\` varchar(72) NOT NULL, \`ssn\` int NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`meta_id\` int NULL, INDEX \`idx_patient_email\` (\`email\`), INDEX \`idx_patient_phone\` (\`phone\`), UNIQUE INDEX \`unique_patient_email\` (\`email\`), UNIQUE INDEX \`unique_patient_phone\` (\`phone\`), UNIQUE INDEX \`REL_e26e0a170d6a8607e45908b72e\` (\`meta_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+      `CREATE TABLE \`patient_meta\` (\`id\` int NOT NULL AUTO_INCREMENT, \`ssn\` int NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `CREATE TABLE \`nurse\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`email\` varchar(255) NOT NULL, \`phone\` int NOT NULL, \`password\` varchar(72) NOT NULL, \`position\` varchar(100) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`meta_id\` int NULL, \`department_id\` int NULL, INDEX \`idx_nurse_email\` (\`email\`), INDEX \`idx_nurse_phone\` (\`phone\`), INDEX \`idx_nurse_department\` (\`department_id\`), UNIQUE INDEX \`unique_nurse_email\` (\`email\`), UNIQUE INDEX \`unique_nurse_phone\` (\`phone\`), UNIQUE INDEX \`REL_5683f760da5b3ac20af896002f\` (\`meta_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+      `CREATE TABLE \`physician_meta\` (\`id\` int NOT NULL AUTO_INCREMENT, \`specification\` varchar(100) NULL, \`qualification\` varchar(100) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`department_id\` int NULL, INDEX \`idx_physicianMeta_department\` (\`department_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `CREATE TABLE \`service\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`description\` varchar(255) NULL, \`cost\` int NOT NULL, \`details\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+      `CREATE TABLE \`user\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`email\` varchar(255) NOT NULL, \`phone\` int NOT NULL, \`password\` varchar(72) NOT NULL, \`address\` varchar(255) NULL, \`gender\` varchar(50) NOT NULL, \`birth_date\` datetime NOT NULL, \`role\` enum ('patient', 'physician', 'nurse') NOT NULL, \`profile_img\` varchar(255) NULL, \`img_caption\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`patientMeta_id\` int NULL, \`physicianMeta_id\` int NULL, \`nurseMeta_id\` int NULL, INDEX \`idx_user_email\` (\`email\`), INDEX \`idx_user_phone\` (\`phone\`), UNIQUE INDEX \`unique_user_email\` (\`email\`), UNIQUE INDEX \`unique_user_phone\` (\`phone\`), UNIQUE INDEX \`REL_a9d4105f83764f961ddcba2fad\` (\`patientMeta_id\`), UNIQUE INDEX \`REL_3d46d2d9228b8879e20f306de0\` (\`physicianMeta_id\`), UNIQUE INDEX \`REL_c8c4d5996e44e5952346b2b60c\` (\`nurseMeta_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
       `CREATE TABLE \`appointment\` (\`id\` int NOT NULL AUTO_INCREMENT, \`starts_at\` datetime NOT NULL, \`ends_at\` datetime NULL, \`is_completed\` tinyint NOT NULL, \`is_paid\` tinyint NOT NULL, \`result\` varchar(255) NOT NULL, \`details\` varchar(255) NOT NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`patient_id\` int NULL, \`physician_id\` int NULL, \`nurse_id\` int NULL, INDEX \`idx_appointment_patient\` (\`patient_id\`), INDEX \`idx_appointment_physician\` (\`physician_id\`), INDEX \`idx_appointment_nurse\` (\`nurse_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
@@ -32,9 +35,6 @@ export class InitialTables1694271118226 implements MigrationInterface {
       `CREATE TABLE \`illness\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`description\` varchar(255) NULL, \`details\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`patient_id\` int NULL, \`diagnosis_id\` int NULL, INDEX \`idx_illness_patient\` (\`patient_id\`), INDEX \`idx_illness_diagnosis\` (\`diagnosis_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `CREATE TABLE \`medication\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(100) NOT NULL, \`requires_recipe\` tinyint NOT NULL, \`description\` varchar(255) NULL, \`details\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
-    );
-    await queryRunner.query(
       `CREATE TABLE \`prescription\` (\`id\` int NOT NULL AUTO_INCREMENT, \`description\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`physician_id\` int NULL, \`patient_id\` int NULL, INDEX \`idx_prescription_physician\` (\`physician_id\`), INDEX \`idx_prescription_patient\` (\`patient_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
@@ -44,49 +44,49 @@ export class InitialTables1694271118226 implements MigrationInterface {
       `CREATE TABLE \`prescription_medication\` (\`prescriptionId\` int NOT NULL, \`medicationId\` int NOT NULL, INDEX \`IDX_3cd4cc3914a0ddd9c089fc3332\` (\`prescriptionId\`), INDEX \`IDX_f523ecc6802d1e3e01115ede23\` (\`medicationId\`), PRIMARY KEY (\`prescriptionId\`, \`medicationId\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `ALTER TABLE \`physician\` ADD CONSTRAINT \`fk_physician_meta\` FOREIGN KEY (\`meta_id\`) REFERENCES \`meta\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`nurse_meta\` ADD CONSTRAINT \`fk_nurse_department\` FOREIGN KEY (\`department_id\`) REFERENCES \`department\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`physician\` ADD CONSTRAINT \`fk_physician_department\` FOREIGN KEY (\`department_id\`) REFERENCES \`department\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`physician_meta\` ADD CONSTRAINT \`fk_physicianMeta_department\` FOREIGN KEY (\`department_id\`) REFERENCES \`department\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`patient\` ADD CONSTRAINT \`fk_patient_meta\` FOREIGN KEY (\`meta_id\`) REFERENCES \`meta\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`user\` ADD CONSTRAINT \`fk_user_patientMeta\` FOREIGN KEY (\`patientMeta_id\`) REFERENCES \`patient_meta\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`nurse\` ADD CONSTRAINT \`fk_nurse_meta\` FOREIGN KEY (\`meta_id\`) REFERENCES \`meta\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`user\` ADD CONSTRAINT \`fk_user_physicianMeta\` FOREIGN KEY (\`physicianMeta_id\`) REFERENCES \`physician_meta\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`nurse\` ADD CONSTRAINT \`fk_nurse_department\` FOREIGN KEY (\`department_id\`) REFERENCES \`department\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`user\` ADD CONSTRAINT \`fk_user_nurseMeta\` FOREIGN KEY (\`nurseMeta_id\`) REFERENCES \`nurse_meta\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`appointment\` ADD CONSTRAINT \`fk_appointment_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`patient\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`appointment\` ADD CONSTRAINT \`fk_appointment_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`appointment\` ADD CONSTRAINT \`fk_appointment_physician\` FOREIGN KEY (\`physician_id\`) REFERENCES \`physician\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`appointment\` ADD CONSTRAINT \`fk_appointment_physician\` FOREIGN KEY (\`physician_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`appointment\` ADD CONSTRAINT \`fk_appointment_nurse\` FOREIGN KEY (\`nurse_id\`) REFERENCES \`nurse\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`appointment\` ADD CONSTRAINT \`fk_appointment_nurse\` FOREIGN KEY (\`nurse_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`diagnosis\` ADD CONSTRAINT \`fk_diagnosis_physician\` FOREIGN KEY (\`physician_id\`) REFERENCES \`physician\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`diagnosis\` ADD CONSTRAINT \`fk_diagnosis_physician\` FOREIGN KEY (\`physician_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`diagnosis\` ADD CONSTRAINT \`fk_diagnosis_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`patient\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`diagnosis\` ADD CONSTRAINT \`fk_diagnosis_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
       `ALTER TABLE \`diagnosis\` ADD CONSTRAINT \`fk_diagnosis_appointment\` FOREIGN KEY (\`appointment_id\`) REFERENCES \`appointment\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`illness\` ADD CONSTRAINT \`fk_illness_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`patient\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`illness\` ADD CONSTRAINT \`fk_illness_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
       `ALTER TABLE \`illness\` ADD CONSTRAINT \`fk_illness_diagnosis\` FOREIGN KEY (\`diagnosis_id\`) REFERENCES \`diagnosis\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`prescription\` ADD CONSTRAINT \`fk_prescription_physician\` FOREIGN KEY (\`physician_id\`) REFERENCES \`physician\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`prescription\` ADD CONSTRAINT \`fk_prescription_physician\` FOREIGN KEY (\`physician_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE \`prescription\` ADD CONSTRAINT \`fk_prescription_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`patient\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`prescription\` ADD CONSTRAINT \`fk_prescription_patient\` FOREIGN KEY (\`patient_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
       `ALTER TABLE \`appointment_service\` ADD CONSTRAINT \`FK_040c82b23e660475d29615eaac5\` FOREIGN KEY (\`appointmentId\`) REFERENCES \`appointment\`(\`id\`) ON DELETE CASCADE ON UPDATE CASCADE`
@@ -146,19 +146,19 @@ export class InitialTables1694271118226 implements MigrationInterface {
       `ALTER TABLE \`appointment\` DROP FOREIGN KEY \`fk_appointment_patient\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`nurse\` DROP FOREIGN KEY \`fk_nurse_department\``
+      `ALTER TABLE \`user\` DROP FOREIGN KEY \`fk_user_nurseMeta\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`nurse\` DROP FOREIGN KEY \`fk_nurse_meta\``
+      `ALTER TABLE \`user\` DROP FOREIGN KEY \`fk_user_physicianMeta\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`patient\` DROP FOREIGN KEY \`fk_patient_meta\``
+      `ALTER TABLE \`user\` DROP FOREIGN KEY \`fk_user_patientMeta\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`physician\` DROP FOREIGN KEY \`fk_physician_department\``
+      `ALTER TABLE \`physician_meta\` DROP FOREIGN KEY \`fk_physicianMeta_department\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`physician\` DROP FOREIGN KEY \`fk_physician_meta\``
+      `ALTER TABLE \`nurse_meta\` DROP FOREIGN KEY \`fk_nurse_department\``
     );
     await queryRunner.query(
       `DROP INDEX \`IDX_f523ecc6802d1e3e01115ede23\` ON \`prescription_medication\``
@@ -181,7 +181,6 @@ export class InitialTables1694271118226 implements MigrationInterface {
       `DROP INDEX \`idx_prescription_physician\` ON \`prescription\``
     );
     await queryRunner.query(`DROP TABLE \`prescription\``);
-    await queryRunner.query(`DROP TABLE \`medication\``);
     await queryRunner.query(
       `DROP INDEX \`idx_illness_diagnosis\` ON \`illness\``
     );
@@ -209,48 +208,31 @@ export class InitialTables1694271118226 implements MigrationInterface {
       `DROP INDEX \`idx_appointment_patient\` ON \`appointment\``
     );
     await queryRunner.query(`DROP TABLE \`appointment\``);
-    await queryRunner.query(`DROP TABLE \`service\``);
     await queryRunner.query(
-      `DROP INDEX \`REL_5683f760da5b3ac20af896002f\` ON \`nurse\``
-    );
-    await queryRunner.query(`DROP INDEX \`unique_nurse_phone\` ON \`nurse\``);
-    await queryRunner.query(`DROP INDEX \`unique_nurse_email\` ON \`nurse\``);
-    await queryRunner.query(`DROP INDEX \`idx_nurse_department\` ON \`nurse\``);
-    await queryRunner.query(`DROP INDEX \`idx_nurse_phone\` ON \`nurse\``);
-    await queryRunner.query(`DROP INDEX \`idx_nurse_email\` ON \`nurse\``);
-    await queryRunner.query(`DROP TABLE \`nurse\``);
-    await queryRunner.query(
-      `DROP INDEX \`REL_e26e0a170d6a8607e45908b72e\` ON \`patient\``
+      `DROP INDEX \`REL_c8c4d5996e44e5952346b2b60c\` ON \`user\``
     );
     await queryRunner.query(
-      `DROP INDEX \`unique_patient_phone\` ON \`patient\``
+      `DROP INDEX \`REL_3d46d2d9228b8879e20f306de0\` ON \`user\``
     );
     await queryRunner.query(
-      `DROP INDEX \`unique_patient_email\` ON \`patient\``
+      `DROP INDEX \`REL_a9d4105f83764f961ddcba2fad\` ON \`user\``
     );
-    await queryRunner.query(`DROP INDEX \`idx_patient_phone\` ON \`patient\``);
-    await queryRunner.query(`DROP INDEX \`idx_patient_email\` ON \`patient\``);
-    await queryRunner.query(`DROP TABLE \`patient\``);
+    await queryRunner.query(`DROP INDEX \`unique_user_phone\` ON \`user\``);
+    await queryRunner.query(`DROP INDEX \`unique_user_email\` ON \`user\``);
+    await queryRunner.query(`DROP INDEX \`idx_user_phone\` ON \`user\``);
+    await queryRunner.query(`DROP INDEX \`idx_user_email\` ON \`user\``);
+    await queryRunner.query(`DROP TABLE \`user\``);
     await queryRunner.query(
-      `DROP INDEX \`REL_62dd5660baf86e415ecb4c8731\` ON \`physician\``
+      `DROP INDEX \`idx_physicianMeta_department\` ON \`physician_meta\``
     );
+    await queryRunner.query(`DROP TABLE \`physician_meta\``);
+    await queryRunner.query(`DROP TABLE \`patient_meta\``);
     await queryRunner.query(
-      `DROP INDEX \`unique_physician_phone\` ON \`physician\``
+      `DROP INDEX \`idx_nurse_department\` ON \`nurse_meta\``
     );
-    await queryRunner.query(
-      `DROP INDEX \`unique_physician_email\` ON \`physician\``
-    );
-    await queryRunner.query(
-      `DROP INDEX \`idx_physician_department\` ON \`physician\``
-    );
-    await queryRunner.query(
-      `DROP INDEX \`idx_physician_phone\` ON \`physician\``
-    );
-    await queryRunner.query(
-      `DROP INDEX \`idx_physician_email\` ON \`physician\``
-    );
-    await queryRunner.query(`DROP TABLE \`physician\``);
+    await queryRunner.query(`DROP TABLE \`nurse_meta\``);
     await queryRunner.query(`DROP TABLE \`department\``);
-    await queryRunner.query(`DROP TABLE \`meta\``);
+    await queryRunner.query(`DROP TABLE \`service\``);
+    await queryRunner.query(`DROP TABLE \`medication\``);
   }
 }

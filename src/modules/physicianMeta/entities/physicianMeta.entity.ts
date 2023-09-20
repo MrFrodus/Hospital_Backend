@@ -4,15 +4,14 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
   JoinColumn,
   Index,
-  Unique,
   ManyToOne,
+  OneToOne,
 } from "typeorm";
 
-import { Meta } from "src/modules/meta/entities/meta.entity";
 import { Department } from "src/modules/department/entities/department.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 @Entity()
 export class PhysicianMeta {
@@ -31,17 +30,6 @@ export class PhysicianMeta {
   })
   qualification: string;
 
-  @OneToOne(() => Meta, (meta) => meta.physicianMeta, {
-    eager: true,
-    onDelete: "CASCADE",
-  })
-  @JoinColumn({
-    name: "meta_id",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_physicianMeta_meta",
-  })
-  meta: Meta;
-
   @Index("idx_physicianMeta_department")
   @ManyToOne(() => Department)
   @JoinColumn({
@@ -50,6 +38,11 @@ export class PhysicianMeta {
     foreignKeyConstraintName: "fk_physicianMeta_department",
   })
   department: Department;
+
+  @OneToOne(() => User, (user) => user.physicianMeta, {
+    onDelete: "CASCADE",
+  })
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;
