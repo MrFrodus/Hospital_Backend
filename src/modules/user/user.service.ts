@@ -23,48 +23,6 @@ export class UserService {
     private nurseMetaService: NurseMetaService
   ) {}
 
-  async createPatient(
-    createUserDto: CreateUserDto,
-    createPatientMetaDto: CreatePatientMetaDto
-  ) {
-    const newUser = this.userRepository.create(createUserDto);
-
-    const newPatientMeta =
-      await this.patientMetaService.create(createPatientMetaDto);
-
-    newUser.patientMeta = newPatientMeta;
-
-    return this.userRepository.save(newUser);
-  }
-
-  async createPhysician(
-    createUserDto: CreateUserDto,
-    createPhysicianMetaDto: CreatePhysicianMetaDto
-  ) {
-    const newUser = this.userRepository.create(createUserDto);
-
-    const newPhysicianMeta = await this.physicianMetaService.create(
-      createPhysicianMetaDto
-    );
-
-    newUser.physicianMeta = newPhysicianMeta;
-
-    return this.userRepository.save(newUser);
-  }
-
-  async createNurse(
-    createUserDto: CreateUserDto,
-    createNurseMetaDto: CreateNurseMetaDto
-  ) {
-    const newUser = this.userRepository.create(createUserDto);
-
-    const newNurseMeta = await this.nurseMetaService.create(createNurseMetaDto);
-
-    newUser.nurseMeta = newNurseMeta;
-
-    return this.userRepository.save(newUser);
-  }
-
   async findAll() {
     const users = await this.userRepository.find({
       relations: {
@@ -100,6 +58,23 @@ export class UserService {
     });
   }
 
+  findOneByEmail(email: string) {
+    return this.userRepository.findOne({
+      relations: {
+        patientMeta: true,
+        physicianMeta: true,
+        nurseMeta: true,
+      },
+      where: {
+        email,
+      },
+    });
+  }
+
+  async findByEmailOrMobile(email: string, phone: number) {
+    return this.userRepository.findOne({ where: [{ email }, { phone }] });
+  }
+
   async findOneWithImgUrl(id: number) {
     const user = await this.findOne(id);
 
@@ -113,46 +88,79 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
 
+    if (!user) {
+      return null;
+    }
+
     return this.userRepository.save({
       ...user,
       ...updateUserDto,
     });
   }
 
-  // async remove(id: number) {
-  //   const user = await this.findOne(id);
-
-  //   await this.fileManager.deleteFile(user.profile_img);
-
-  //   if (user.role === "patient") {
-  //     await this.patientMetaService.remove(user.patientMeta.id);
-  //   } else if (user.role === "physician") {
-  //     await this.physicianMetaService.remove(user.physicianMeta.id);
-  //   } else if (user.role === "nurse") {
-  //     await this.nurseMetaService.remove(user.nurseMeta.id);
-  //   }
-
-  //   return user;
-  // }
-
   async remove(id: number) {
     const user = await this.findOne(id);
 
-    await this.fileManager.deleteFile(user.profile_img);
+    if (!user) {
+      return null;
+    }
 
-    const metaService = {
-      patient: this.patientMetaService,
-      physician: this.physicianMetaService,
-      nurse: this.nurseMetaService,
-    };
+    if (user.profile_img) {
+      await this.fileManager.deleteFile(user.profile_img);
+    }
 
-    const metaId = user[`${user.role}Meta`].id;
-    await metaService[user.role].remove(metaId);
+    if (user.role === "patient") {
+      await this.patientMetaService.remove(user.patientMeta.id);
+    } else if (user.role === "physician") {
+      await this.physicianMetaService.remove(user.physicianMeta.id);
+    } else if (user.role === "nurse") {
+      await this.nurseMetaService.remove(user.nurseMeta.id);
+    }
 
     return user;
   }
 
+  async create(
+    createUserDto: CreateUserDto,
+    createMetaDto:
+      | CreatePatientMetaDto
+      | CreatePhysicianMetaDto
+      | CreateNurseMetaDto
+  ) {
+    const newUser = this.userRepository.create(createUserDto);
+
+    if (
+      newUser.role === "patient" &&
+      createMetaDto instanceof CreatePatientMetaDto
+    ) {
+      newUser.patientMeta = await this.patientMetaService.create(createMetaDto);
+    } else if (
+      newUser.role === "physician" &&
+      createMetaDto instanceof CreatePhysicianMetaDto
+    ) {
+      newUser.physicianMeta =
+        await this.physicianMetaService.create(createMetaDto);
+    } else if (
+      newUser.role === "nurse" &&
+      createMetaDto instanceof CreateNurseMetaDto
+    ) {
+      newUser.nurseMeta = await this.nurseMetaService.create(createMetaDto);
+    }
+
+    return this.userRepository.save(newUser);
+  }
+
   async uploadProfileImg(id: number, file: Express.Multer.File) {
+    const user = await this.findOne(id);
+
+    if (!user) {
+      return null;
+    }
+
+    if (user.profile_img) {
+      await this.fileManager.deleteFile(user.profile_img);
+    }
+
     const fileName = await this.fileManager.upload(file);
 
     return this.update(+id, {

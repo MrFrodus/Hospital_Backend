@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
-import { ValidationPipe } from "@nestjs/common/pipes/validation.pipe";
 import { PatientMetaService } from "./patientMeta.service";
 import { CreatePatientMetaDto } from "./dto/create-patientMeta.dto";
 import { UpdatePatientMetaDto } from "./dto/update-patientMeta.dto";
@@ -18,7 +17,7 @@ export class PatientMetaController {
 
   @Post()
   create(
-    @Body(new ValidationPipe())
+    @Body()
     createPatientMetaDto: CreatePatientMetaDto
   ) {
     return this.patientMetaService.create(createPatientMetaDto);
@@ -37,7 +36,7 @@ export class PatientMetaController {
   @Patch(":id")
   update(
     @Param("id") id: string,
-    @Body(new ValidationPipe()) updatePatientMetaDto: UpdatePatientMetaDto
+    @Body() updatePatientMetaDto: UpdatePatientMetaDto
   ) {
     return this.patientMetaService.update(+id, updatePatientMetaDto);
   }

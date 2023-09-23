@@ -5,7 +5,7 @@ import { CreatePatientMetaDto } from "src/modules/patientMeta/dto/create-patient
 import { CreateNurseMetaDto } from "src/modules/nurseMeta/dto/create-nurseMeta.dto";
 import { CreateUserDto } from "./create-user.dto";
 
-export class UserRequestDto {
+export class RequestUserDto {
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CreateUserDto)
@@ -15,17 +15,17 @@ export class UserRequestDto {
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CreatePatientMetaDto)
-  patient_meta?: CreatePatientMetaDto;
+  patientMeta?: CreatePatientMetaDto;
 
   @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CreatePhysicianMetaDto)
-  physician_meta?: CreatePhysicianMetaDto;
+  physicianMeta?: CreatePhysicianMetaDto;
 
   @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CreateNurseMetaDto)
-  nurse_meta?: CreateNurseMetaDto;
+  nurseMeta?: CreateNurseMetaDto;
 }

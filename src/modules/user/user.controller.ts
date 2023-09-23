@@ -1,47 +1,24 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
   UseInterceptors,
   UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { SharpPipe } from "src/common/pipes/sharp.pipe";
 import { UserService } from "./user.service";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { UserRequestDto } from "./dto/request-user.dto";
 
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post("patient")
-  createPatient(@Body() userRequestDto: UserRequestDto) {
-    return this.userService.createPatient(
-      userRequestDto.user,
-      userRequestDto.patient_meta
-    );
-  }
-
-  @Post("physician")
-  createPhysician(@Body() userRequestDto: UserRequestDto) {
-    return this.userService.createPhysician(
-      userRequestDto.user,
-      userRequestDto.physician_meta
-    );
-  }
-
-  @Post("nurse")
-  createNurse(@Body() userRequestDto: UserRequestDto) {
-    return this.userService.createNurse(
-      userRequestDto.user,
-      userRequestDto.nurse_meta
-    );
-  }
 
   @Get()
   findAll() {
@@ -61,7 +38,16 @@ export class UserController {
   @Patch("upload/:id")
   @UseInterceptors(FileInterceptor("image"))
   async uploadImage(
-    @UploadedFile(new SharpPipe()) file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 80000 }),
+          new FileTypeValidator({ fileType: "image/jpeg" }),
+        ],
+      }),
+      new SharpPipe()
+    )
+    file: Express.Multer.File,
     @Param("id") id: string
   ) {
     return this.userService.uploadProfileImg(+id, file);
