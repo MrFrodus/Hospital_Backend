@@ -1,3 +1,5 @@
+import { Service } from "src/modules/service/entities/service.entity";
+
 export class CreateAppointmentDto {
   patient_id: number;
 
@@ -16,4 +18,6 @@ export class CreateAppointmentDto {
   result: string;
 
   details: string;
+
+  services: Service[];
 }

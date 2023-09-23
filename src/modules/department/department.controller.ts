@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from "@nestjs/common";
 import { DepartmentService } from "./department.service";
 import { CreateDepartmentDto } from "./dto/create-department.dto";
@@ -26,20 +27,41 @@ export class DepartmentController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.departmentService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    const department = await this.departmentService.findOne(+id);
+
+    if (!department) {
+      return new NotFoundException();
+    }
+
+    return department;
   }
 
   @Patch(":id")
-  update(
+  async update(
     @Param("id") id: string,
     @Body() updateDepartmentDto: UpdateDepartmentDto
   ) {
-    return this.departmentService.update(+id, updateDepartmentDto);
+    const updatedDepartment = await this.departmentService.update(
+      +id,
+      updateDepartmentDto
+    );
+
+    if (!updatedDepartment) {
+      return new NotFoundException();
+    }
+
+    return updatedDepartment;
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.departmentService.remove(+id);
+  async remove(@Param("id") id: string) {
+    const removedDepartment = await this.departmentService.remove(+id);
+
+    if (!removedDepartment) {
+      return new NotFoundException();
+    }
+
+    return removedDepartment;
   }
 }

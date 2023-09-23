@@ -1,26 +1,47 @@
 import { Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 import { CreateMedicationDto } from "./dto/create-medication.dto";
 import { UpdateMedicationDto } from "./dto/update-medication.dto";
+import { Medication } from "./entities/medication.entity";
 
 @Injectable()
 export class MedicationService {
+  constructor(
+    @InjectRepository(Medication)
+    private medicationRepository: Repository<Medication>
+  ) {}
+
   create(createMedicationDto: CreateMedicationDto) {
-    return "This action adds a new medication";
+    const newMedication = this.medicationRepository.create(createMedicationDto);
+
+    return this.medicationRepository.save(newMedication);
   }
 
   findAll() {
-    return `This action returns all medication`;
+    return this.medicationRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} medication`;
+    return this.medicationRepository.findOne({
+      where: { id },
+    });
   }
 
-  update(id: number, updateMedicationDto: UpdateMedicationDto) {
-    return `This action updates a #${id} medication`;
+  async update(id: number, updateMedicationDto: UpdateMedicationDto) {
+    const medication = await this.findOne(id);
+
+    if (!medication) {
+      return null;
+    }
+
+    return this.medicationRepository.save({
+      ...medication,
+      ...updateMedicationDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} medication`;
+    return this.medicationRepository.delete(id);
   }
 }

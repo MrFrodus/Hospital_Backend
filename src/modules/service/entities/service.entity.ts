@@ -1,9 +1,11 @@
+import { Appointment } from "src/modules/appointment/entities/appointment.entity";
 import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from "typeorm";
 
 @Entity()
@@ -33,6 +35,9 @@ export class Service {
     nullable: true,
   })
   details: string;
+
+  @ManyToMany(() => Appointment, (appointment) => appointment.services)
+  appointments: Appointment[];
 
   @CreateDateColumn()
   created_at: Date;

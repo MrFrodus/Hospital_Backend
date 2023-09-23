@@ -10,9 +10,12 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  UseGuards,
+  NotFoundException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { SharpPipe } from "src/common/pipes/sharp.pipe";
+import { AuthGuard } from "src/common/guards/auth.guard";
 import { UserService } from "./user.service";
 import { UpdateUserDto } from "./dto/update-user.dto";
 
@@ -20,19 +23,32 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    const user = await this.userService.findOne(+id);
+
+    if (!user) {
+      return new NotFoundException();
+    }
+
+    return user;
   }
 
   @Get("img/:id")
-  findOneWithImgUrl(@Param("id") id: string) {
-    return this.userService.findOneWithImgUrl(+id);
+  async findOneWithImgUrl(@Param("id") id: string) {
+    const user = await this.userService.findOneWithImgUrl(+id);
+
+    if (!user) {
+      return new NotFoundException();
+    }
+
+    return user;
   }
 
   @Patch("upload/:id")
@@ -50,16 +66,34 @@ export class UserController {
     file: Express.Multer.File,
     @Param("id") id: string
   ) {
-    return this.userService.uploadProfileImg(+id, file);
+    const user = await this.userService.uploadProfileImg(+id, file);
+
+    if (!user) {
+      return new NotFoundException();
+    }
+
+    return user;
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
+    const updatedUser = await this.userService.update(+id, updateUserDto);
+
+    if (!updatedUser) {
+      return new NotFoundException();
+    }
+
+    return updatedUser;
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param("id") id: string) {
+    const removedUser = await this.userService.remove(+id);
+
+    if (!removedUser) {
+      return new NotFoundException();
+    }
+
+    return removedUser;
   }
 }

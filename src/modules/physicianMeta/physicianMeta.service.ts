@@ -23,7 +23,7 @@ export class PhysicianMetaService {
   }
 
   async findAll() {
-    return this.physicianMetaRepository.find({});
+    return this.physicianMetaRepository.find();
   }
 
   findOne(id: number) {

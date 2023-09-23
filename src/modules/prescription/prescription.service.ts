@@ -1,26 +1,56 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import { CreatePrescriptionDto } from "./dto/create-prescription.dto";
 import { UpdatePrescriptionDto } from "./dto/update-prescription.dto";
+import { Prescription } from "./entities/prescription.entity";
 
 @Injectable()
 export class PrescriptionService {
+  constructor(
+    @InjectRepository(Prescription)
+    private prescriptionRepository: Repository<Prescription>
+  ) {}
+
   create(createPrescriptionDto: CreatePrescriptionDto) {
-    return "This action adds a new prescription";
+    const newPrescription = this.prescriptionRepository.create(
+      createPrescriptionDto
+    );
+
+    return this.prescriptionRepository.save(newPrescription);
   }
 
   findAll() {
-    return `This action returns all prescription`;
+    return this.prescriptionRepository.find({
+      relations: {
+        patient: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} prescription`;
+    return this.prescriptionRepository.findOne({
+      relations: {
+        patient: true,
+      },
+      where: { id },
+    });
   }
 
-  update(id: number, updatePrescriptionDto: UpdatePrescriptionDto) {
-    return `This action updates a #${id} prescription`;
+  async update(id: number, updatePrescriptionDto: UpdatePrescriptionDto) {
+    const prescription = await this.findOne(id);
+
+    if (!prescription) {
+      return null;
+    }
+
+    return this.prescriptionRepository.save({
+      ...prescription,
+      ...updatePrescriptionDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} prescription`;
+    return this.prescriptionRepository.delete(id);
   }
 }

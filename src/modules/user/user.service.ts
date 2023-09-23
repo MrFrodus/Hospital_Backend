@@ -32,17 +32,21 @@ export class UserService {
       },
     });
 
-    const usersWithImgUrl = await Promise.all(
-      users.map(async (user) => {
-        if (user.profile_img) {
-          user.profile_img = await this.fileManager.getFile(user.profile_img);
-        }
+    if (users.length > 0) {
+      const usersWithImgUrl = await Promise.all(
+        users.map(async (user) => {
+          if (user.profile_img) {
+            user.profile_img = await this.fileManager.getFile(user.profile_img);
+          }
 
-        return user;
-      })
-    );
+          return user;
+        })
+      );
 
-    return usersWithImgUrl;
+      return usersWithImgUrl;
+    }
+
+    return users;
   }
 
   findOne(id: number) {
@@ -78,7 +82,7 @@ export class UserService {
   async findOneWithImgUrl(id: number) {
     const user = await this.findOne(id);
 
-    if (user.profile_img) {
+    if (user && user.profile_img) {
       user.profile_img = await this.fileManager.getFile(user.profile_img);
     }
 

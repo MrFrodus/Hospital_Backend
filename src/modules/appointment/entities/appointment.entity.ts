@@ -78,7 +78,7 @@ export class Appointment {
   })
   details: string;
 
-  @ManyToMany(() => Service)
+  @ManyToMany(() => Service, { cascade: true })
   @JoinTable({
     name: "appointment_service",
   })

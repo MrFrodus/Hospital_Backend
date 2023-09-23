@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from "@nestjs/common";
 import { MedicationService } from "./medication.service";
 import { CreateMedicationDto } from "./dto/create-medication.dto";
@@ -26,20 +27,41 @@ export class MedicationController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.medicationService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    const medication = await this.medicationService.findOne(+id);
+
+    if (!medication) {
+      return new NotFoundException();
+    }
+
+    return medication;
   }
 
   @Patch(":id")
-  update(
+  async update(
     @Param("id") id: string,
     @Body() updateMedicationDto: UpdateMedicationDto
   ) {
-    return this.medicationService.update(+id, updateMedicationDto);
+    const updatedMedication = await this.medicationService.update(
+      +id,
+      updateMedicationDto
+    );
+
+    if (!updatedMedication) {
+      return new NotFoundException();
+    }
+
+    return updatedMedication;
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.medicationService.remove(+id);
+  async remove(@Param("id") id: string) {
+    const removedMedication = await this.medicationService.remove(+id);
+
+    if (!removedMedication) {
+      return new NotFoundException();
+    }
+
+    return removedMedication;
   }
 }

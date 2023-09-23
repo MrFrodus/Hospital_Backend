@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { DiagnosisService } from './diagnosis.service';
-import { CreateDiagnosisDto } from './dto/create-diagnosis.dto';
-import { UpdateDiagnosisDto } from './dto/update-diagnosis.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+} from "@nestjs/common";
+import { DiagnosisService } from "./diagnosis.service";
+import { CreateDiagnosisDto } from "./dto/create-diagnosis.dto";
+import { UpdateDiagnosisDto } from "./dto/update-diagnosis.dto";
 
-@Controller('diagnosis')
+@Controller("diagnosis")
 export class DiagnosisController {
   constructor(private readonly diagnosisService: DiagnosisService) {}
 
@@ -17,18 +26,42 @@ export class DiagnosisController {
     return this.diagnosisService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.diagnosisService.findOne(+id);
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
+    const diagnosis = await this.diagnosisService.findOne(+id);
+
+    if (!diagnosis) {
+      return new NotFoundException();
+    }
+
+    return diagnosis;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiagnosisDto: UpdateDiagnosisDto) {
-    return this.diagnosisService.update(+id, updateDiagnosisDto);
+  @Patch(":id")
+  async update(
+    @Param("id") id: string,
+    @Body() updateDiagnosisDto: UpdateDiagnosisDto
+  ) {
+    const updatedDiagnosis = await this.diagnosisService.update(
+      +id,
+      updateDiagnosisDto
+    );
+
+    if (!updatedDiagnosis) {
+      return new NotFoundException();
+    }
+
+    return updatedDiagnosis;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.diagnosisService.remove(+id);
+  @Delete(":id")
+  async remove(@Param("id") id: string) {
+    const removedDiagnosis = await this.diagnosisService.remove(+id);
+
+    if (!removedDiagnosis) {
+      return new NotFoundException();
+    }
+
+    return removedDiagnosis;
   }
 }

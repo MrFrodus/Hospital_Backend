@@ -13,7 +13,6 @@ const TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string;
     JwtModule.register({
       global: true,
       secret: TOKEN_SECRET,
-      signOptions: { expiresIn: "60s" },
     }),
   ],
   controllers: [AuthController],
