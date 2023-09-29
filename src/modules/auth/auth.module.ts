@@ -1,18 +1,23 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import "dotenv/config";
+import { CustomConfigModule } from "src/config/custom-config.module";
+import { ConfigService } from "@nestjs/config";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { UserModule } from "../user/user.module";
 
-const TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string;
-
 @Module({
   imports: [
     UserModule,
-    JwtModule.register({
-      global: true,
-      secret: TOKEN_SECRET,
+    CustomConfigModule,
+    JwtModule.registerAsync({
+      imports: [CustomConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get("token"),
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],

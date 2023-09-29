@@ -19,7 +19,7 @@ export class Department {
 
   @Column({
     length: 255,
-    nullable: true,
+    nullable: false,
   })
   address: string;
 

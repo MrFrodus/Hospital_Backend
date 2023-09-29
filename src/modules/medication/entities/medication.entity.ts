@@ -1,9 +1,11 @@
+import { Prescription } from "src/modules/prescription/entities/prescription.entity";
 import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from "typeorm";
 
 @Entity()
@@ -33,6 +35,9 @@ export class Medication {
     nullable: true,
   })
   details: string;
+
+  @ManyToMany(() => Prescription, (prescription) => prescription.medications)
+  prescriptions: Prescription[];
 
   @CreateDateColumn()
   created_at: Date;

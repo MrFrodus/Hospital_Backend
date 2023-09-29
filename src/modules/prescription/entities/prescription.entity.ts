@@ -9,6 +9,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  RelationId,
 } from "typeorm";
 
 import { Medication } from "src/modules/medication/entities/medication.entity";
@@ -20,7 +21,7 @@ export class Prescription {
   id: number;
 
   @Index("idx_prescription_physician")
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn({
     name: "physician_id",
     referencedColumnName: "id",
@@ -28,8 +29,11 @@ export class Prescription {
   })
   physician: User;
 
+  @Column({ type: "int", nullable: false })
+  physician_id: number;
+
   @Index("idx_prescription_patient")
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn({
     name: "patient_id",
     referencedColumnName: "id",
@@ -37,15 +41,26 @@ export class Prescription {
   })
   patient: User;
 
+  @Column({ type: "int", nullable: false })
+  patient_id: number;
+
   @Column({
     length: 255,
     nullable: true,
   })
   description: string;
 
-  @ManyToMany(() => Medication)
+  @ManyToMany(() => Medication, { cascade: true })
   @JoinTable({
     name: "prescription_medication",
+    joinColumn: {
+      name: "prescription_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "medication_id",
+      referencedColumnName: "id",
+    },
   })
   medications: Medication[];
 

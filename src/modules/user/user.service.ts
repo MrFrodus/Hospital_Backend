@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { FileManager } from "src/common/filestore/file-manager.service";
+import { ConfigService } from "@nestjs/config";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./entities/user.entity";
@@ -20,7 +21,8 @@ export class UserService {
     private fileManager: FileManager,
     private patientMetaService: PatientMetaService,
     private physicianMetaService: PhysicianMetaService,
-    private nurseMetaService: NurseMetaService
+    private nurseMetaService: NurseMetaService,
+    private configService: ConfigService
   ) {}
 
   async findAll() {
@@ -80,6 +82,7 @@ export class UserService {
   }
 
   async findOneWithImgUrl(id: number) {
+
     const user = await this.findOne(id);
 
     if (user && user.profile_img) {
@@ -169,6 +172,17 @@ export class UserService {
 
     return this.update(+id, {
       profile_img: fileName,
+    });
+  }
+
+  async validateById(id: number) {
+    return this.userRepository.findOne({
+      select: {
+        id: true,
+      },
+      where: {
+        id,
+      },
     });
   }
 }

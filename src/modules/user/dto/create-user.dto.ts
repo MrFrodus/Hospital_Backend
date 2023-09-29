@@ -3,10 +3,11 @@ import {
   IsNotEmpty,
   IsEmail,
   IsInt,
-  IsOptional,
   IsDateString,
   IsEnum,
+  Validate,
 } from "class-validator";
+import { IsNotExist } from "src/common/validation/is-not-exist.rule";
 
 import { UserRole } from "../entities/user.entity";
 
@@ -17,18 +18,22 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsEmail()
+  @Validate(IsNotExist, ["User", "email"], {
+    message: "user with such an email already exists",
+  })
   email: string;
 
   @IsNotEmpty()
   @IsInt()
+  @Validate(IsNotExist, ["User", "phone"], {
+    message: "user with such an phone number already exists",
+  })
   phone: number;
 
   @IsNotEmpty()
   @IsString()
   password: string;
 
-  @IsOptional()
-  @IsNotEmpty()
   @IsString()
   address?: string;
 
@@ -44,13 +49,9 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @IsOptional()
-  @IsNotEmpty()
   @IsString()
   profile_img?: string;
 
-  @IsOptional()
-  @IsNotEmpty()
   @IsString()
   img_caption?: string;
 }

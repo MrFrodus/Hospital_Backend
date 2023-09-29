@@ -7,24 +7,26 @@ import {
 } from "@aws-sdk/client-s3";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
-import "dotenv/config";
-
-const region = process.env.AWS_BUCKET_REGION;
-const bucketName = process.env.AWS_BUCKET_NAME;
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class StorageS3 {
   private s3Client: S3Client;
 
-  constructor() {
-    this.s3Client = new S3Client({ region });
+  private awsRegion: string; // Store the AWS region
+
+  constructor(private readonly configService: ConfigService) {
+    this.awsRegion = this.configService.get<string>("aws_region");
+
+    this.s3Client = new S3Client({
+      region: this.awsRegion,
+    });
   }
 
   async upload(file: Express.Multer.File) {
     try {
       const uploadParams = {
-        Bucket: bucketName,
+        Bucket: this.configService.get("aws_bucket_name"),
         Body: file.buffer,
         Key: file.originalname,
         ContentType: file.mimetype,
@@ -42,7 +44,7 @@ export class StorageS3 {
   async getFile(fileName: string) {
     try {
       const getParams = {
-        Bucket: bucketName,
+        Bucket: this.configService.get("aws_bucket_name"),
         Key: fileName,
       };
 
@@ -61,7 +63,7 @@ export class StorageS3 {
   async deleteFile(fileName: string) {
     try {
       const deleteParams = {
-        Bucket: bucketName,
+        Bucket: this.configService.get("aws_bucket_name"),
         Key: fileName,
       };
 

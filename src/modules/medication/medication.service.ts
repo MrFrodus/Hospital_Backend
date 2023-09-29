@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateMedicationDto } from "./dto/create-medication.dto";
 import { UpdateMedicationDto } from "./dto/update-medication.dto";
@@ -43,5 +43,18 @@ export class MedicationService {
 
   remove(id: number) {
     return this.medicationRepository.delete(id);
+  }
+
+  findByIds(ids: number[]) {
+    return this.medicationRepository.findBy({ id: In(ids) });
+  }
+
+  validateByIds(ids: number[]) {
+    return this.medicationRepository.find({
+      where: { id: In(ids) },
+      select: {
+        id: true,
+      },
+    });
   }
 }

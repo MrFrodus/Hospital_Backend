@@ -9,20 +9,16 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { AppointmentService } from "./appointment.service";
-import { CreateAppointmentDto } from "./dto/create-appointment.dto";
 import { UpdateAppointmentDto } from "./dto/update-appointment.dto";
-import { RequestAppointmentDto } from "./dto/request-appointment.dto";
+import { CreateAppointmentDto } from "./dto/create-appointment.dto";
 
 @Controller("appointment")
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Post()
-  create(@Body() requestAppointmentDto: RequestAppointmentDto) {
-    return this.appointmentService.create(
-      requestAppointmentDto.appointment,
-      requestAppointmentDto.services
-    );
+  create(@Body() createAppointmentDto: CreateAppointmentDto) {
+    return this.appointmentService.create(createAppointmentDto);
   }
 
   @Get()

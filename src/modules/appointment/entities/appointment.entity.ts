@@ -28,6 +28,9 @@ export class Appointment {
   })
   patient: User;
 
+  @Column({ type: "int", nullable: false })
+  patient_id: number;
+
   @Index("idx_appointment_physician")
   @ManyToOne(() => User)
   @JoinColumn({
@@ -37,6 +40,9 @@ export class Appointment {
   })
   physician: User;
 
+  @Column({ type: "int", nullable: false })
+  physician_id: number;
+
   @Index("idx_appointment_nurse")
   @ManyToOne(() => User)
   @JoinColumn({
@@ -45,6 +51,9 @@ export class Appointment {
     foreignKeyConstraintName: "fk_appointment_nurse",
   })
   nurse: User;
+
+  @Column({ type: "int", nullable: false })
+  nurse_id: number;
 
   @Column({
     nullable: false,
@@ -81,6 +90,14 @@ export class Appointment {
   @ManyToMany(() => Service, { cascade: true })
   @JoinTable({
     name: "appointment_service",
+    joinColumn: {
+      name: "appointment_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "service_id",
+      referencedColumnName: "id",
+    },
   })
   services: Service[];
 

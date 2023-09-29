@@ -55,4 +55,13 @@ export class ServiceService {
   findByIds(ids: number[]) {
     return this.serviceRepository.findBy({ id: In(ids) });
   }
+
+  validateByIds(ids: number[]) {
+    return this.serviceRepository.find({
+      where: { id: In(ids) },
+      select: {
+        id: true,
+      },
+    });
+  }
 }

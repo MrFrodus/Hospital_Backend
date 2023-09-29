@@ -1,10 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import {
-  UnauthorizedException,
-  ConflictException,
-} from "@nestjs/common/exceptions";
+import { UnauthorizedException } from "@nestjs/common/exceptions";
 import { UserService } from "../user/user.service";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { CreatePatientMetaDto } from "../patientMeta/dto/create-patientMeta.dto";
@@ -48,20 +45,7 @@ export class AuthService {
       | CreatePhysicianMetaDto
       | CreateNurseMetaDto
   ) {
-    const { email, phone, password } = createUserDto;
-
-    const existingUser = await this.userService.findByEmailOrMobile(
-      email,
-      phone
-    );
-
-    if (existingUser) {
-      const errorField =
-        email === existingUser.email ? "an email" : "a mobile number";
-      const errorMessage = `User with such ${errorField} already exists`;
-
-      throw new ConflictException(errorMessage);
-    }
+    const { password } = createUserDto;
 
     const salt = await bcrypt.genSalt();
 

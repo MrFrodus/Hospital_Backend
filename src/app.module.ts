@@ -1,8 +1,9 @@
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module } from "@nestjs/common";
 import { ServeStaticModule } from "@nestjs/serve-static/dist/serve-static.module";
 import { join } from "path";
-import { dataSourceOptions } from "./db/data-source";
+// import { dataSourceOptions } from "./db/data-source";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PatientMetaModule } from "./modules/patientMeta/patientMeta.module";
@@ -17,13 +18,18 @@ import { MedicationModule } from "./modules/medication/medication.module";
 import { ServiceModule } from "./modules/service/service.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UserModule } from "./modules/user/user.module";
+import { typeOrmAsyncConfig } from "./config/typeorm.config";
+import { CustomConfigModule } from "./config/custom-config.module";
+import { FileManagerModule } from "./common/filestore/file-manager.module";
 
 @Module({
   imports: [
+    CustomConfigModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "public"),
     }),
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    FileManagerModule,
     PatientMetaModule,
     PhysicianMetaModule,
     NurseMetaModule,
@@ -41,3 +47,6 @@ import { UserModule } from "./modules/user/user.module";
   providers: [AppService],
 })
 export class AppModule {}
+
+const configService = new ConfigService();
+console.log(configService.get("db_host"));

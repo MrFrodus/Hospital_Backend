@@ -1,22 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import { FileManagerConfig } from "src/config";
+import { ConfigService } from "@nestjs/config";
 import { StorageLocal } from "./local-storage";
 import { StorageS3 } from "./s3-storage";
 
-const storageTypes = {
-  StorageLocal: new StorageLocal(),
-  StorageS3: new StorageS3(),
-};
-
 @Injectable()
 export class FileManager {
-  private storageType: "StorageLocal" | "StorageS3";
-
   private storage: StorageLocal | StorageS3;
 
-  constructor() {
-    this.storageType = FileManagerConfig.STORAGE_TYPE;
-    this.storage = storageTypes[this.storageType];
+  constructor(private readonly configService: ConfigService) {
+    if (FileManagerConfig.STORAGE_TYPE === "StorageLocal") {
+      this.storage = new StorageLocal();
+    } else if (FileManagerConfig.STORAGE_TYPE === "StorageS3") {
+      this.storage = new StorageS3(configService);
+    } else {
+      throw new Error("Invalid STORAGE_TYPE configuration.");
+    }
   }
 
   async upload(file: Express.Multer.File): Promise<string> {

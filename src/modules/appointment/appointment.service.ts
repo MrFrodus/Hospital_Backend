@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateAppointmentDto } from "./dto/create-appointment.dto";
@@ -14,24 +14,14 @@ export class AppointmentService {
     private serviceService: ServiceService
   ) {}
 
-  async create(
-    createAppointmentDto: CreateAppointmentDto,
-    servicesIds: number[]
-  ) {
+  async create(createAppointmentDto: CreateAppointmentDto) {
     const newAppointment =
       this.appointmentRepository.create(createAppointmentDto);
 
-    if (servicesIds.length > 0) {
-      const services = await this.serviceService.findByIds(servicesIds);
+    const { service_ids } = createAppointmentDto;
 
-      const foundIds = services.map((service) => service.id);
-      const notFoundIds = servicesIds.filter((id) => !foundIds.includes(id));
-
-      if (notFoundIds.length > 0) {
-        throw new NotFoundException(
-          `Services with IDs ${notFoundIds.join(", ")} not found.`
-        );
-      }
+    if (service_ids.length > 0) {
+      const services = await this.serviceService.findByIds(service_ids);
 
       newAppointment.services = services;
     }
