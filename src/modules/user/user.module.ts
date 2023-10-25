@@ -1,9 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FileManager } from "src/common/filestore/file-manager.service";
 import { IsNotExist } from "src/common/validation/is-not-exist.rule";
 import { JwtModule } from "@nestjs/jwt";
-import { AuthGuard } from "src/common/guards/auth.guard";
 import { FileManagerModule } from "src/common/filestore/file-manager.module";
 import { UserService } from "./user.service";
 import { UserController } from "./user.controller";

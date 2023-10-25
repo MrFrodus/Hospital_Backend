@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ServeStaticModule } from "@nestjs/serve-static/dist/serve-static.module";
 import { join } from "path";
 // import { dataSourceOptions } from "./db/data-source";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -18,17 +18,38 @@ import { MedicationModule } from "./modules/medication/medication.module";
 import { ServiceModule } from "./modules/service/service.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UserModule } from "./modules/user/user.module";
-import { typeOrmAsyncConfig } from "./config/typeorm.config";
-import { CustomConfigModule } from "./config/custom-config.module";
 import { FileManagerModule } from "./common/filestore/file-manager.module";
+import secretManagerConfig from "./config/secret-manager.config";
 
 @Module({
   imports: [
-    CustomConfigModule,
+    ConfigModule.forRoot({
+      load: [secretManagerConfig],
+      isGlobal: true,
+    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "public"),
     }),
-    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (
+        configService: ConfigService
+      ): Promise<TypeOrmModuleOptions> => {
+        const secrets = await configService.get("database");
+
+        return {
+          type: "mysql",
+          host: secrets.db_host,
+          port: secrets.db_port,
+          username: secrets.db_username,
+          database: secrets.db_database,
+          password: secrets.db_password,
+          entities: ["dist/**/*.entity.js"],
+          migrations: ["dist/db/migrations/*.js"],
+          synchronize: false,
+        };
+      },
+    }),
     FileManagerModule,
     PatientMetaModule,
     PhysicianMetaModule,
@@ -47,6 +68,3 @@ import { FileManagerModule } from "./common/filestore/file-manager.module";
   providers: [AppService],
 })
 export class AppModule {}
-
-const configService = new ConfigService();
-console.log(configService.get("db_host"));

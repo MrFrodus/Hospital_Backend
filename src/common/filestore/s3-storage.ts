@@ -25,12 +25,16 @@ export class StorageS3 {
 
   async upload(file: Express.Multer.File) {
     try {
+      console.log(file.mimetype);
+
       const uploadParams = {
         Bucket: this.configService.get("aws_bucket_name"),
         Body: file.buffer,
         Key: file.originalname,
         ContentType: file.mimetype,
       };
+
+      console.log(uploadParams);
 
       await this.s3Client.send(new PutObjectCommand(uploadParams));
 

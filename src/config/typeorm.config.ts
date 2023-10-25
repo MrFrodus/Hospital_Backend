@@ -1,12 +1,18 @@
-import { ConfigService } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from "@nestjs/typeorm";
 import { CustomConfigModule } from "./custom-config.module";
+import secretManagerConfig from "./secret-manager.config";
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
-  imports: [CustomConfigModule],
+  imports: [
+    ConfigModule.forRoot({
+      load: [secretManagerConfig],
+      isGlobal: true,
+    }),
+  ],
   inject: [ConfigService],
   useFactory: async (
     configService: ConfigService

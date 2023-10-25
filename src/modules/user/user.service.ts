@@ -82,7 +82,6 @@ export class UserService {
   }
 
   async findOneWithImgUrl(id: number) {
-
     const user = await this.findOne(id);
 
     if (user && user.profile_img) {
